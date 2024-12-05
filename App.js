@@ -19,14 +19,13 @@ import ExcretionDetailScreen from './screens/ExcretionDetailScreen';
 const store = configureStore({
   reducer: {
     pets: petSlice,
-    todos: todoSlice, // Add todos reducer
+    todos: todoSlice, 
   },
 });
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// Pet-related screens stack
 function PetStackNavigator() {
   return (
     <Stack.Navigator>
