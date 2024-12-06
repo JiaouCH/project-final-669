@@ -15,19 +15,18 @@ export default function EditScreen({ route, navigation }) {
     gender: '',
     breed: '',
     imageUrl: null,
-    id: null, // Initialize id as null
+    id: null,
   });
 
   useEffect(() => {
-    // If editing, pre-fill the form with the pet's existing data
     if (isEdit && pet) {
       setPetInfo({
         name: pet.name,
         age: pet.age,
         gender: pet.gender,
-        breed: pet.breed, // Pre-fill the breed
+        breed: pet.breed,
         imageUrl: pet.imageUrl,
-        id: pet.id,  // Make sure id is set
+        id: pet.id,
       });
     }
   }, [isEdit, pet]);
@@ -53,25 +52,21 @@ export default function EditScreen({ route, navigation }) {
 
     try {
       if (isEdit) {
-        // Create the updated pet object by merging the pet data with the modified fields
         const updatedPet = {
-          ...pet,  // Spread the original pet object (this includes weights, targetWeight, etc.)
-          name: petInfo.name,  // Update name
-          age: petInfo.age,  // Update age
-          gender: petInfo.gender,  // Update gender
-          breed: petInfo.breed,  // Update breed
-          imageUrl: petInfo.imageUrl,  // Update imageUrl
+          ...pet,
+          name: petInfo.name,
+          age: petInfo.age,
+          gender: petInfo.gender,
+          breed: petInfo.breed,
+          imageUrl: petInfo.imageUrl,
         };
         
-        // Dispatch the update action with the complete pet object
         await dispatch(updatePet(updatedPet));
         navigation.navigate('PetDetailScreen', { pet: petInfo });
       } else {
-        // For adding a new pet, remove the id property from petInfo
-        const { id, ...newPetWithoutId } = petInfo;  // Destructure to remove the id
-        newPetWithoutId.weights = [];  // Initialize weights as an empty array
+        const { id, ...newPetWithoutId } = petInfo;
+        newPetWithoutId.weights = [];
   
-        // Dispatch the action to add the new pet
         await dispatch(addPet(newPetWithoutId));
         navigation.navigate('PetOverview');
       }
@@ -82,11 +77,9 @@ export default function EditScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* Logo */}
       <Image source={require('../assets/logo.png')} style={styles.logo} />
       <Text style={styles.header}>{isEdit ? 'Update Pet' : 'Add New Pet'}</Text>
 
-      {/* Image Picker */}
       <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
         {petInfo.imageUrl ? (
           <Image source={{ uri: petInfo.imageUrl }} style={styles.image} />
@@ -95,7 +88,6 @@ export default function EditScreen({ route, navigation }) {
         )}
       </TouchableOpacity>
 
-      {/* Input Fields */}
       <TextInput
         placeholder="Name"
         value={petInfo.name}
@@ -122,7 +114,6 @@ export default function EditScreen({ route, navigation }) {
         style={styles.input}
       />
 
-      {/* Save and Cancel Buttons */}
       <Button title="Save" onPress={handleSave} buttonStyle={styles.saveButton} />
       <Button
         title="Cancel"

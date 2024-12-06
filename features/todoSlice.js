@@ -4,7 +4,6 @@ import { getAuthUser } from '../AuthManager';
 
 const db = getFirestore();
 
-// Fetch todos for the current user
 export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
   const user = getAuthUser();
   const todoQuery = query(collection(db, 'todos'), where('ownerId', '==', user.uid));
@@ -12,21 +11,18 @@ export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
   return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 });
 
-// Add a new todo
 export const addTodo = createAsyncThunk('todos/addTodo', async (todo) => {
   const user = getAuthUser();
-  const newTodo = { ...todo, ownerId: user.uid }; // Associate todo with the current user
+  const newTodo = { ...todo, ownerId: user.uid }; 
   const docRef = await addDoc(collection(db, 'todos'), newTodo);
   return { id: docRef.id, ...newTodo };
 });
 
-// Delete a todo
 export const deleteTodo = createAsyncThunk('todos/deleteTodo', async (todoId) => {
   await deleteDoc(doc(db, 'todos', todoId));
   return todoId;
 });
 
-// Update a todo
 export const updateTodo = createAsyncThunk('todos/updateTodo', async ({ id, updatedTodo }) => {
   const todoRef = doc(db, 'todos', id);
   await updateDoc(todoRef, updatedTodo);

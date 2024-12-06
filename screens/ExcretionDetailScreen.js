@@ -2,22 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
 import { Button, Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
-import { addExcretionLog, deleteExcretionLog, fetchPetById } from '../features/petSlice'; // Import necessary actions
+import { addExcretionLog, deleteExcretionLog, fetchPetById } from '../features/petSlice'; 
 
 export default function ExcretionDetailScreen({ route, navigation }) {
   const { petId } = route.params;
   const dispatch = useDispatch();
 
-  const pet = useSelector(state => state.pets.pets.find(p => p.id === petId)); // Find pet by petId
+  const pet = useSelector(state => state.pets.pets.find(p => p.id === petId)); 
 
   const [excretionLogs, setExcretionLogs] = useState(pet?.excretionLogs || []);
-  const [selectedExcretionType, setSelectedExcretionType] = useState(''); // To store selected excretion type
+  const [selectedExcretionType, setSelectedExcretionType] = useState(''); 
   const [isAddModalVisible, setAddModalVisible] = useState(false);
 
   useEffect(() => {
     if (petId) {
-      // Fetch pet data from Redux or Firebase
-      dispatch(fetchPetById(petId));  // Assuming fetchPetById is already implemented
+      dispatch(fetchPetById(petId));  
     }
   }, [petId, dispatch]);
 
@@ -32,7 +31,7 @@ export default function ExcretionDetailScreen({ route, navigation }) {
       Alert.alert('Error', 'Please select an excretion type.');
       return;
     }
-    const currentDate = new Date().toLocaleDateString(); // Get current date
+    const currentDate = new Date().toLocaleDateString(); 
     const newExcretionRecord = { value: selectedExcretionType, date: currentDate };
     await dispatch(addExcretionLog({ petId, excretion: newExcretionRecord }));
     setExcretionLogs([newExcretionRecord, ...excretionLogs]);

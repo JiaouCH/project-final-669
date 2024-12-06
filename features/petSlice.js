@@ -13,12 +13,11 @@ export const addExcretionLog = createAsyncThunk('pets/addExcretionLog', async ({
   }
 
   const petData = petSnapshot.data();
-  const updatedExcretionLogs = [excretion, ...(petData.excretionLogs || [])]; // Add new excretion log
+  const updatedExcretionLogs = [excretion, ...(petData.excretionLogs || [])]; 
 
-  // Update the pet document with the new excretion logs
   await setDoc(petDoc, { ...petData, excretionLogs: updatedExcretionLogs });
 
-  return { id: petId, excretionLogs: updatedExcretionLogs }; // Return updated excretion logs
+  return { id: petId, excretionLogs: updatedExcretionLogs }; 
 });
 
 export const deleteExcretionLog = createAsyncThunk('pets/deleteExcretionLog', async ({ petId, excretionLogId }) => {
@@ -32,28 +31,20 @@ export const deleteExcretionLog = createAsyncThunk('pets/deleteExcretionLog', as
 
   const petData = petSnapshot.data();
   const updatedExcretionLogs = petData.excretionLogs.filter((_, index) => index !== excretionLogId);
-  console.log('updatedExcretionLogs', updatedExcretionLogs);
-  // Update the pet document in Firebase
   await setDoc(petDoc, { ...petData, excretionLogs: updatedExcretionLogs });
 
-  return { petId, excretionLogs: updatedExcretionLogs };  // Return the updated excretionLogs
+  return { petId, excretionLogs: updatedExcretionLogs };  
 });
-
 
 export const deletePet = createAsyncThunk(
   'pets/deletePet',
   async (petId, { rejectWithValue }) => {
     try {
-      console.log('deletePet', petId);
-      const petDocRef = doc(db, 'pets', petId); // 获取对应 petId 的文档引用
-      await deleteDoc(petDocRef); // 删除文档
-
-      // 如果删除成功，返回被删除的 petId
+      const petDocRef = doc(db, 'pets', petId); 
+      await deleteDoc(petDocRef); 
       return petId;
     } catch (error) {
-      // 如果有错误，打印错误并返回错误信息
-      console.error('Error deleting pet:', error);
-      return rejectWithValue(error.message);  // 使用 rejectWithValue 返回错误信息
+      return rejectWithValue(error.message);  
     }
   }
 );
@@ -67,12 +58,10 @@ export const addWaterLog = createAsyncThunk('pets/addWaterLog', async ({ petId, 
   }
 
   const petData = petSnapshot.data();
-  const updatedWaterLogs = [water, ...(petData.waterLogs || [])]; // Add new water log
-
-  // Update the pet document with the new water logs
+  const updatedWaterLogs = [water, ...(petData.waterLogs || [])]; 
   await setDoc(petDoc, { ...petData, waterLogs: updatedWaterLogs });
 
-  return { id: petId, waterLogs: updatedWaterLogs }; // Return updated water logs
+  return { id: petId, waterLogs: updatedWaterLogs }; 
 });
 
 export const deleteWaterLog = createAsyncThunk('pets/deleteWaterLog', async ({ petId, waterLogId }) => {
@@ -85,11 +74,40 @@ export const deleteWaterLog = createAsyncThunk('pets/deleteWaterLog', async ({ p
 
   const petData = petSnapshot.data();
   const updatedWaterLogs = petData.waterLogs.filter((_, index) => index !== waterLogId);
-
-  // Update the pet document with the new water logs
   await setDoc(petDoc, { ...petData, waterLogs: updatedWaterLogs });
 
-  return { id: petId, waterLogs: updatedWaterLogs }; // Return updated water logs
+  return { id: petId, waterLogs: updatedWaterLogs }; 
+});
+
+export const addFoodLog = createAsyncThunk('pets/addFoodLog', async ({ petId, food }) => {
+  const petDoc = doc(db, 'pets', petId);
+  const petSnapshot = await getDoc(petDoc);
+
+  if (!petSnapshot.exists()) {
+    throw new Error('Pet does not exist!');
+  }
+
+  const petData = petSnapshot.data();
+  const newFoodLog = { ...food, date: new Date().toLocaleDateString() }; 
+  const updatedFoodLogs = [newFoodLog, ...(petData.foodLogs || [])]; 
+  await setDoc(petDoc, { ...petData, foodLogs: updatedFoodLogs });
+
+  return { id: petId, foodLogs: updatedFoodLogs }; 
+});
+
+export const deleteFoodLog = createAsyncThunk('pets/deleteFoodLog', async ({ petId, foodLogId }) => {
+  const petDoc = doc(db, 'pets', petId);
+  const petSnapshot = await getDoc(petDoc);
+
+  if (!petSnapshot.exists()) {
+    throw new Error('Pet does not exist!');
+  }
+
+  const petData = petSnapshot.data();
+  const updatedFoodLogs = petData.foodLogs.filter((_, index) => index !== foodLogId);
+  await setDoc(petDoc, { ...petData, foodLogs: updatedFoodLogs });
+
+  return { id: petId, foodLogs: updatedFoodLogs }; 
 });
 
 export const deleteWeightLog = createAsyncThunk('pets/deleteWeightLog', async ({ petId, weightLogId }) => { 
@@ -108,7 +126,6 @@ export const deleteWeightLog = createAsyncThunk('pets/deleteWeightLog', async ({
 }
 );
 
-// Update water goal for a pet
 export const updateWaterGoal = createAsyncThunk('pets/updateWaterGoal', async ({ petId, waterGoal }) => {
   const petDoc = doc(db, 'pets', petId);
   const petSnapshot = await getDoc(petDoc);
@@ -122,16 +139,14 @@ export const updateWaterGoal = createAsyncThunk('pets/updateWaterGoal', async ({
     ...petData,
     waterGoal,
   };
-
-  // Update the pet document with the new water goal
   await setDoc(petDoc, updatedPetData);
 
   return { id: petId, waterGoal };
 });
-// Add a new pet
+
 export const addPet = createAsyncThunk('pets/addPet', async (petData) => {
   const user = getAuthUser();
-  const newPet = { ...petData, ownerId: user.uid, weights: [] }; // Initialize weights as an empty array
+  const newPet = { ...petData, ownerId: user.uid, weights: [] }; 
   const docRef = await addDoc(collection(db, 'pets'), newPet);
   return { id: docRef.id, ...newPet };
 });
@@ -151,7 +166,6 @@ export const updatePet = createAsyncThunk('pets/updatePet', async (updatedPet) =
   const { id, ...petData } = updatedPet;
   const petDoc = doc(db, 'pets', id);
 
-  // Ensure we keep the weights data intact
   const petSnapshot = await getDoc(petDoc);
   if (!petSnapshot.exists()) {
     throw new Error('Pet does not exist!');
@@ -159,16 +173,14 @@ export const updatePet = createAsyncThunk('pets/updatePet', async (updatedPet) =
 
   const petDataFromFirestore = petSnapshot.data();
 
-  // Ensure weights are not overwritten (use existing weights if not provided)
   const updatedPetData = {
-    ...petDataFromFirestore, // Preserve existing data
-    ...petData,               // Update with the new data
-    weights: petData.weights || petDataFromFirestore.weights, // Preserve weights
+    ...petDataFromFirestore, 
+    ...petData,               
+    weights: petData.weights || petDataFromFirestore.weights, 
   };
 
-  // Update pet document with the modified data
   await updateDoc(petDoc, updatedPetData);
-  return updatedPet; // Return updated pet with new data
+  return updatedPet; 
 });
 
 export const updateTargetWeight = createAsyncThunk('pets/updateTargetWeight', async ({ petId, targetWeight }) => {
@@ -186,8 +198,6 @@ export const updateTargetWeight = createAsyncThunk('pets/updateTargetWeight', as
   return { id: petId, targetWeight };
 });
 
-
-// Add a weight record to a pet (preserve existing weights)
 export const addWeightLog = createAsyncThunk('pets/addWeightLog', async ({ petId, weight }) => {
   const petDoc = doc(db, 'pets', petId);
   const petSnapshot = await getDoc(petDoc);
@@ -197,29 +207,25 @@ export const addWeightLog = createAsyncThunk('pets/addWeightLog', async ({ petId
   }
 
   const petData = petSnapshot.data();
-  const updatedWeights = [weight, ...(petData.weights || [])];; // Add new weight
+  const updatedWeights = [weight, ...(petData.weights || [])];; 
 
-  // Use setDoc to update the pet document with the new weights
   await setDoc(petDoc, { ...petData, weights: updatedWeights });
 
-  return { id: petId, weights: updatedWeights }; // Return updated weights
+  return { id: petId, weights: updatedWeights }; 
 });
-
 
 export const fetchPets = createAsyncThunk('pets/fetchPets', async () => {
   const user = getAuthUser();
   const petQuery = query(collection(db, 'pets'), where('ownerId', '==', user.uid));
 
-  // Fetch documents from the collection
   const querySnapshot = await getDocs(petQuery);
 
-  // Process each document, including the weights field
   return querySnapshot.docs.map(doc => {
-    const petData = doc.data(); // Get the pet data from the document
+    const petData = doc.data(); 
     return {
       id: doc.id, 
       ...petData,
-      weights: petData.weights || []  // Ensure weights is always an array
+      weights: petData.weights || []  
     };
   });
 });
@@ -253,7 +259,7 @@ const petSlice = createSlice({
         }
       })
       .addCase(deletePet.fulfilled, (state, action) => {
-        state.pets = state.pets.filter(pet => pet.id !== action.payload); // 移除已删除的宠物
+        state.pets = state.pets.filter(pet => pet.id !== action.payload); 
       })
       .addCase(updateTargetWeight.fulfilled, (state, action) => {
         const index = state.pets.findIndex((pet) => pet.id === action.payload.id);
@@ -288,7 +294,6 @@ const petSlice = createSlice({
       .addCase(deleteExcretionLog.fulfilled, (state, action) => {
         const index = state.pets.findIndex((pet) => pet.id === action.payload.petId);
         if (index !== -1) {
-          // Correctly filter and update the excretion logs in the state
           state.pets[index].excretionLogs = action.payload.excretionLogs;
         }
       })
@@ -302,6 +307,18 @@ const petSlice = createSlice({
         const index = state.pets.findIndex((pet) => pet.id === action.payload.id);
         if (index !== -1) {
           state.pets[index].waterLogs = action.payload.waterLogs;
+        }
+      })
+      .addCase(addFoodLog.fulfilled, (state, action) => {
+        const index = state.pets.findIndex((pet) => pet.id === action.payload.id);
+        if (index !== -1) {
+          state.pets[index].foodLogs = action.payload.foodLogs;
+        }
+      })
+      .addCase(deleteFoodLog.fulfilled, (state, action) => {
+        const index = state.pets.findIndex((pet) => pet.id === action.payload.id);
+        if (index !== -1) {
+          state.pets[index].foodLogs = action.payload.foodLogs;
         }
       });
   },

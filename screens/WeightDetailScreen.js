@@ -13,17 +13,15 @@ export default function WeightDetailScreen({ route, navigation }) {
   const [newWeight, setNewWeight] = useState('');
   const [isAddModalVisible, setAddModalVisible] = useState(false);
   const [isTargetModalVisible, setTargetModalVisible] = useState(false);
+  const [newTargetWeight, setNewTargetWeight] = useState(targetWeight || '');
 
-  // Fetch pet data by petId when screen is focused
   useEffect(() => {
-    dispatch(fetchPetById(petId));  // Fetch pet data
+    dispatch(fetchPetById(petId));  
   }, [petId, dispatch]);
 
-  // Access the pet data from the Redux store
   const pet = useSelector(state => state.pets.pets.find(p => p.id === petId));
   console.log('WeightDetailScreen', pet);
 
-  // Once the pet data is loaded, update local state
   useEffect(() => {
     if (pet) {
       setWeights(pet.weights || []);
@@ -87,76 +85,60 @@ export default function WeightDetailScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" type="material" color="#51A39D" />
         </TouchableOpacity>
         <Text style={styles.header}>Weight</Text>
       </View>
-
-      {/* Target Section */}
       <View style={styles.targetContainer}>
         <Text style={styles.targetText}>Target: {targetWeight || 'N/A'} kg</Text>
         <Text style={styles.targetText}>Now: {weights[0]?.value || 'N/A'} kg</Text>
         <Button
-          title="Edit Target"
-          onPress={() => setTargetModalVisible(true)}
-          buttonStyle={styles.editButton}
-        />
+  title="Edit Target"
+  onPress={() => {
+    setNewTargetWeight(targetWeight);
+    setTargetModalVisible(true);
+  }}
+  buttonStyle={styles.editButton}
+/>
       </View>
-
-      {/* Weight Log Section */}
       <FlatList
         data={weights}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderWeightItem}
         ListHeaderComponent={<Text style={styles.logHeader}>Weight Log</Text>}
       />
-
-      {/* Add Log Button */}
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => setAddModalVisible(true)}
       >
         <Icon name="add" type="material" color="white" />
       </TouchableOpacity>
-
-      {/* Add Log Modal */}
-      <Modal visible={isAddModalVisible} animationType="slide" transparent>
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalHeader}>Add Log</Text>
-          <TextInput
-            placeholder="Weight (kg)"
-            value={newWeight}
-            onChangeText={setNewWeight}
-            style={styles.input}
-            keyboardType="numeric"
-          />
-          <View style={styles.modalButtons}>
-            <Button title="Cancel" onPress={() => setAddModalVisible(false)} />
-            <Button title="Save" onPress={handleAddWeight} />
-          </View>
-        </View>
-      </Modal>
-
-      {/* Edit Target Modal */}
       <Modal visible={isTargetModalVisible} animationType="slide" transparent>
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalHeader}>Edit Target</Text>
-          <TextInput
-            placeholder="Target (kg)"
-            value={targetWeight}
-            onChangeText={setTargetWeight}
-            style={styles.input}
-            keyboardType="numeric"
-          />
-          <View style={styles.modalButtons}>
-            <Button title="Cancel" onPress={() => setTargetModalVisible(false)} />
-            <Button title="Save" onPress={handleUpdateTargetWeight} />
-          </View>
-        </View>
-      </Modal>
+  <View style={styles.modalContainer}>
+    <Text style={styles.modalHeader}>Edit Target</Text>
+    <TextInput
+      placeholder="Target (kg)"
+      value={newTargetWeight}
+      onChangeText={setNewTargetWeight}
+      style={styles.input}
+      keyboardType="numeric"
+    />
+    <View style={styles.modalButtons}>
+      <Button title="Cancel" onPress={() => setTargetModalVisible(false)} />
+      <Button title="Save" onPress={() => {
+        if (!newTargetWeight) {
+          Alert.alert('Error', 'Please enter a valid target weight.');
+          return;
+        }
+        dispatch(updateTargetWeight({ petId, targetWeight: newTargetWeight }));
+        setTargetWeight(newTargetWeight);
+        setTargetModalVisible(false);
+      }} />
+    </View>
+  </View>
+</Modal>
     </View>
   );
 }

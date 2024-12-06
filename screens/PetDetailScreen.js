@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { fetchPetById } from '../features/petSlice'; // 假设你在这里引入了 fetchPetById 函数
+import { fetchPetById } from '../features/petSlice'; 
 import { useDispatch } from 'react-redux';
 import { Icon } from '@rneui/themed';
 
 export default function PetDetailScreen({ route, navigation }) {
-  const { pet } = route.params || {};  // 从路由参数中获取 petId
+  const { pet } = route.params || {};  
   const petId = pet.id;
   const [petData, setPetData] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // 如果 petId 存在，则调用 fetchPetById 获取宠物数据
     if (petId) {
       dispatch(fetchPetById(petId))
         .then((action) => {
           if (action.payload) {
-            setPetData(action.payload);  // 更新宠物数据
+            setPetData(action.payload);  
           }
         })
         .catch((error) => {
@@ -27,19 +26,16 @@ export default function PetDetailScreen({ route, navigation }) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      // 当屏幕获得焦点时，重新加载数据
       if (petId) {
         dispatch(fetchPetById(petId)).then(action => {
-          setPetData(action.payload);  // 更新 petData
+          setPetData(action.payload);  
         });
       }
     });
 
-    // 清理监听器
     return unsubscribe;
   }, [navigation, petId, dispatch]);
 
-  // 如果 petData 为空，显示加载中的 UI
   if (!petData) {
     return (
       <View style={styles.container}>
@@ -48,44 +44,21 @@ export default function PetDetailScreen({ route, navigation }) {
     );
   }
 
-  // 获取最新的体重
   const getLatestWeight = () => {
     if (petData.weights && petData.weights.length > 0) {
       const sortedWeights = [...petData.weights].sort((a, b) => new Date(b.date) - new Date(a.date));
-      return sortedWeights[0].value;  // 返回最新的体重值
+      return sortedWeights[0].value;  
     }
     return 'No weight data available';
   };
-
-  const getTodayDate = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');  // 保证两位数
-    const day = today.getDate().toString().padStart(2, '0');  // 保证两位数
   
-    return `${year}/${month}/${day}`; // 返回格式为 YYYY/MM/DD
-  };
-  
-  // 获取今天的水摄入量
   const getLatestWater = () => {
-    const todayDate = getTodayDate();  // 获取今天的日期，格式为 YYYY/MM/DD
-  
     if (petData.waterLogs && petData.waterLogs.length > 0) {
-      // 查找今天的水摄入记录
-      const todayWaterLog = petData.waterLogs.find(log => {
-        const logDate = log.date;  // 这里假设 waterLogs 中的日期格式为 YYYY/MM/DD
-        return logDate === todayDate; // 直接比较日期部分
-      });
-  
-      if (todayWaterLog) {
-        return todayWaterLog.value; // 返回今天的水摄入量
-      }
+      const sortedWaterLogs = [...petData.waterLogs].sort((a, b) => new Date(b.date) - new Date(a.date));
+      return sortedWaterLogs[0].value;  
     }
-  
-    return 0; // 如果今天没有水记录，返回0
+    return 'No weight data available';
   };
-
-
 
   const handleBackToOverview = () => {
     navigation.navigate('Home');
@@ -111,7 +84,6 @@ export default function PetDetailScreen({ route, navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* 宠物信息 */}
       <Image source={{ uri: petData.imageUrl }} style={styles.petImage} />
       <View style={styles.petInfo}>
         <Text style={styles.petName}>{petData.name}</Text>
@@ -119,8 +91,7 @@ export default function PetDetailScreen({ route, navigation }) {
         <Text style={styles.petDetails}>{petData.age} months</Text>
         <Text style={styles.petDetails}>{petData.gender}</Text>
       </View>
-
-      {/* 四个部分 */}
+      
       <View style={styles.sections}>
         <TouchableOpacity
           style={styles.section}
@@ -140,12 +111,12 @@ export default function PetDetailScreen({ route, navigation }) {
         >
           <View style={styles.weightBox}>
             <Text style={styles.sectionText}>Water Intake</Text>
-            <Text style={styles.weightText}>Today: {getLatestWater()} L</Text>
+            <Text style={styles.weightText}>Recent: {getLatestWater()} L</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity 
           style={styles.section}
-          
+          onPress={() => navigation.navigate('FoodDetailScreen', { petId: pet.id })}
         >
           <Text style={styles.sectionText}>Food</Text>
         </TouchableOpacity>

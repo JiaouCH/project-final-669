@@ -64,7 +64,6 @@ export default function TodoScreen() {
 
   const renderTodo = ({ item }) => (
     <View style={styles.todoItem}>
-      {/* Content of the todo (name, date, and todo) */}
       <TouchableOpacity style={styles.todoContent} onPress={() => handleEditTodo(item)}>
         <View style={styles.nameDateContainer}>
           <Text style={styles.todoPetName}>{item.petName}</Text>
@@ -73,7 +72,6 @@ export default function TodoScreen() {
         <Text style={styles.todoDetails}>{item.todo}</Text>
       </TouchableOpacity>
   
-      {/* Edit and Delete buttons positioned outside the todo content */}
       <View style={styles.buttonsContainer}>
         <TouchableOpacity onPress={() => handleDeleteTodo(item.id)} style={styles.deleteButton}>
           <Icon name="delete" type="material" color="#51A39D" />
@@ -146,28 +144,28 @@ const styles = StyleSheet.create({
     marginVertical: 50,
   },
   todoItem: {
-    flexDirection: 'row', // Align todo content and buttons horizontally
-    justifyContent: 'space-between', // Space out the content and buttons
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
     marginBottom: 10,
-    alignItems: 'center', // Align the items vertically in the center
+    alignItems: 'center', 
   },
   todoContent: {
-    flex: 2, // Allow todo content (name, date, todo text) to take available space
+    flex: 2, 
     backgroundColor: '#f4f4f4',
     padding: 15,
     borderRadius: 10,
-    marginRight: 15, // Space between todo content and buttons
+    marginRight: 15, 
   },
   nameDateContainer: {
-    flexDirection: 'row', // Align name and date horizontally
-    justifyContent: 'space-between', // Optional: space between name and date
-    marginBottom: 5, // Space between name/date and todo description
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    marginBottom: 5, 
   },
 
   todoPetName: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginRight: 10, // Space between name and date
+    marginRight: 10, 
   },
 
   todoDetails: {
@@ -176,17 +174,17 @@ const styles = StyleSheet.create({
   },
 
   buttonsContainer: {
-    flexDirection: 'row', // Align the buttons horizontally
-    justifyContent: 'flex-end', // Position buttons to the right side
-    alignItems: 'center', // Vertically align the buttons
+    flexDirection: 'row', 
+    justifyContent: 'flex-end', 
+    alignItems: 'center', 
   },
 
   editButton: {
-    marginRight: 10, // Space between the Edit and Delete buttons
+    marginRight: 10, 
   },
 
   deleteButton: {
-    marginRight: 10, // Space between buttons
+    marginRight: 10, 
   },
   addButton: {
     backgroundColor: '#51A39D',
