@@ -115,6 +115,22 @@ export default function WeightDetailScreen({ route, navigation }) {
       >
         <Icon name="add" type="material" color="white" />
       </TouchableOpacity>
+      <Modal visible={isAddModalVisible} animationType="slide" transparent>
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalHeader}>Add Log</Text>
+          <TextInput
+            placeholder="Weight (kg)"
+            value={newWeight}
+            onChangeText={setNewWeight}
+            style={styles.input}
+            keyboardType="numeric"
+          />
+          <View style={styles.modalButtons}>
+            <Button title="Cancel" onPress={() => setAddModalVisible(false)} />
+            <Button title="Save" onPress={handleAddWeight} />
+          </View>
+        </View>
+      </Modal>
       <Modal visible={isTargetModalVisible} animationType="slide" transparent>
   <View style={styles.modalContainer}>
     <Text style={styles.modalHeader}>Edit Target</Text>
