@@ -49,6 +49,7 @@ export const deletePet = createAsyncThunk(
   }
 );
 
+//add a water log to the firebase
 export const addWaterLog = createAsyncThunk('pets/addWaterLog', async ({ petId, water }) => {
   const petDoc = doc(db, 'pets', petId);
   const petSnapshot = await getDoc(petDoc);
