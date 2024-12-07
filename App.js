@@ -41,6 +41,7 @@ function PetStackNavigator() {
   );
 }
 
+// Tab navigator
 function TabNavigator() {
   return (
     <Tab.Navigator
