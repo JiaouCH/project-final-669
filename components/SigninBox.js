@@ -3,7 +3,14 @@ import { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, Image } from 'react-native';
 import { Button } from '@rneui/themed';
 
-
+/*
+- Author(s) name (Individual or corporation)
+- Date
+- Title of program/source code
+- Code version
+- Type (e.g. computer program, source code)
+- Web address or publisher (e.g. program publisher, URL)
+*/
 function SigninBox({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
