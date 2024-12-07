@@ -7,6 +7,19 @@ import { addUser } from "../features/petSlice";
 import SigninBox from "../components/SigninBox";
 import SignupBox from "../components/SignupBox";
 
+/*
+References:
+- Benjamin Mullins
+- 11/24/2024
+- Lecture 10 notes Authentication with Firebase, Integration with Firestore & Redux
+- Lecture 10 notes
+- https://www.dropbox.com/scl/fi/jnpxmkihzhl41bdjixoor/10.-Authentication-with-Firebase%2C-Integration-with-Firestore-%26-Redux.paper?dl=0&rlkey=exv3x13sfhgc49s40iomugatu&st=pdgppv32
+
+- Benjamin Mullins
+- 11/24/2024
+- Lecture 10 preclass github code
+- https://github.com/UMSI579/nov-7-who-the-heck-knows/blob/4-security-measures/features/authSlice.js
+*/
 function LoginScreen({ navigation }) {
   const [loginMode, setLoginMode] = useState(true);
   useEffect(() => {
