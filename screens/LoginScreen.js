@@ -8,6 +8,7 @@ import SigninBox from "../components/SigninBox";
 import SignupBox from "../components/SignupBox";
 
 /*
+References:
 - Benjamin Mullins
 - 11/24/2024
 - Lecture 10 notes Authentication with Firebase, Integration with Firestore & Redux
